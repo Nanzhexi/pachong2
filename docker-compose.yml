@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: a257814256  # 替换为你的数据库密码
+      MYSQL_DATABASE: news_data  # 替换为你的数据库名称
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: python_app
+    environment:
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASSWORD=a257814256  # 替换为你的数据库密码
+      - DB_NAME=news_data  # 替换为你的数据库名称
+      - OPENAI_API_KEY=sk-6d7d3b006cf441528e9c3ae61d5633a5  # 替换为你的OpenAI API密钥
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+
+volumes:
+  db_data:
